@@ -1,0 +1,227 @@
+basePath: /api
+definitions:
+  models.BlogPost:
+    properties:
+      body:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        description: <- add this
+        type: integer
+    type: object
+  utils.APIResponse:
+    properties:
+      data: {}
+      error:
+        type: string
+      success:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Blog post backend API
+  title: Blog CRUD API
+  version: "1.0"
+paths:
+  /blog-post:
+    get:
+      parameters:
+      - default: 10
+        description: Limit number
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.BlogPost'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      summary: Get all blog posts with pagination
+      tags:
+      - Blog
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Blog Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.BlogPost'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.BlogPost'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new blog post
+      tags:
+      - Blog
+  /blog-post/{id}:
+    delete:
+      parameters:
+      - description: Blog Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a blog post by ID
+      tags:
+      - Blog
+    get:
+      parameters:
+      - description: Blog Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.BlogPost'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      summary: Get a blog post by ID
+      tags:
+      - Blog
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Blog Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Blog Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.BlogPost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.BlogPost'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a blog post by ID
+      tags:
+      - Blog
+  /blog-post/user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.BlogPost'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.APIResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get blog posts by authenticated user
+      tags:
+      - Blog
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
