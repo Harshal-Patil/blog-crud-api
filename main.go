@@ -9,7 +9,17 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
+	"github.com/gofiber/swagger"
 )
+
+// @title Blog CRUD API
+// @version 1.0
+// @description Blog post backend API
+// @host localhost:8080
+// @BasePath /api
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
 	utils.InitLogger()
@@ -19,7 +29,7 @@ func main() {
 
 	app := fiber.New()
 
-	// app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// Public route (optional login simulation)
 	app.Post("/api/login", handlers.Login)
