@@ -1,0 +1,104 @@
+{
+    "info": {
+      "name": "Blog CRUD API",
+      "_postman_id": "c1eeae2d-7f5f-4fd5-b198-fb8deaa7ec1d",
+      "description": "Test Go-Fiber Blog CRUD API with JWT Auth",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Register",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpass\"\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": { "raw": "{{base_url}}/api/register", "host": ["{{base_url}}"], "path": ["api", "register"] }
+        }
+      },
+      {
+        "name": "Login",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpass\"\n}",
+            "options": { "raw": { "language": "json" } }
+          },
+          "url": { "raw": "{{base_url}}/api/login", "host": ["{{base_url}}"], "path": ["api", "login"] }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "const jsonData = pm.response.json();",
+                "pm.environment.set(\"token\", jsonData.token);"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Create Blog Post",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"title\": \"Test Post\",\n    \"description\": \"Intro\",\n    \"body\": \"This is a test post\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/blog-post", "host": ["{{base_url}}"], "path": ["api", "blog-post"] }
+        }
+      },
+      {
+        "name": "Get All Blog Posts",
+        "request": {
+          "method": "GET",
+          "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+          "url": { "raw": "{{base_url}}/api/blog-post", "host": ["{{base_url}}"], "path": ["api", "blog-post"] }
+        }
+      },
+      {
+        "name": "Get Blog Post by ID",
+        "request": {
+          "method": "GET",
+          "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+          "url": { "raw": "{{base_url}}/api/blog-post/1", "host": ["{{base_url}}"], "path": ["api", "blog-post", "1"] }
+        }
+      },
+      {
+        "name": "Update Blog Post",
+        "request": {
+          "method": "PATCH",
+          "header": [
+            { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+            { "key": "Content-Type", "value": "application/json", "type": "text" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"title\": \"Updated Post\",\n    \"description\": \"Updated desc\",\n    \"body\": \"Updated body\"\n}"
+          },
+          "url": { "raw": "{{base_url}}/api/blog-post/1", "host": ["{{base_url}}"], "path": ["api", "blog-post", "1"] }
+        }
+      },
+      {
+        "name": "Delete Blog Post",
+        "request": {
+          "method": "DELETE",
+          "header": [{ "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }],
+          "url": { "raw": "{{base_url}}/api/blog-post/1", "host": ["{{base_url}}"], "path": ["api", "blog-post", "1"] }
+        }
+      }
+    ]
+  }
+  
